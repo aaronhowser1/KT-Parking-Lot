@@ -44,18 +44,11 @@ data class ParkingLot(val size: Int, val spots: MutableMap<Int, Car>) {
         }
     }
 
-    private fun carsByColor(color: String): List<Car> {
+    fun regByColor(color: String): String {
 
         val carsWithColor = spots.values.filter { it.color.lowercase() == color.lowercase() }
 
-        return carsWithColor
-    }
-
-    fun regByColor(color: String): String {
-
-        val carsWithColor = carsByColor(color)
-
-        if (carsWithColor.isNullOrEmpty()) {
+        if (carsWithColor.isEmpty()) {
             return "No cars with color $color were found."
         }
 
@@ -65,6 +58,23 @@ data class ParkingLot(val size: Int, val spots: MutableMap<Int, Car>) {
 
         return registrationIds.joinToString(", ")
 
+    }
+
+    fun spotByColor(color: String): String {
+
+        val returnSpots = mutableListOf<Int>()
+
+        for (spot in spots) {
+            val (spotNumber, car) = spot
+
+            if (color == car.color) returnSpots.add(spotNumber)
+        }
+
+        return if (returnSpots.isEmpty()) {
+            "No cars with color $color were found."
+        } else {
+            returnSpots.joinToString(", ")
+        }
     }
 
     private fun check(spot: Int): Car? = spots[spot]
@@ -106,6 +116,7 @@ fun showMenu() {
                         "park" -> parkingLot.park(arguments[0], arguments[1])
                         "status" -> parkingLot.printStatus()
                         "reg_by_color" -> println(parkingLot.regByColor(arguments[0]))
+                        "spot_by_color" -> println(parkingLot.spotByColor(arguments[0]))
                     }
                 }
             }
