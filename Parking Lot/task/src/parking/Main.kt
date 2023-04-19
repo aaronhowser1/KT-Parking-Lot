@@ -79,12 +79,19 @@ data class ParkingLot(val size: Int, val spots: MutableMap<Int, Car>) {
 
     fun spotByReg(registration: String): String {
 
-        val amount = spots.values.count {it.id.lowercase() == registration.lowercase()}
+        val returnSpots = mutableListOf<Int>()
 
-        return if (amount == 0) {
+
+        for (spot in spots) {
+            val (spotNumber, car) = spot
+
+            if (registration.lowercase() == car.id.lowercase()) returnSpots.add(spotNumber)
+        }
+
+        return if (returnSpots.isEmpty()) {
             "No cars with registration number $registration were found."
         } else {
-            amount.toString()
+            returnSpots.joinToString(", ")
         }
     }
 
