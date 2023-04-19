@@ -1,5 +1,6 @@
 package parking
 
+import java.lang.IllegalArgumentException
 import java.lang.IndexOutOfBoundsException
 
 data class Car(val id: String, val color: String)
@@ -43,6 +44,29 @@ data class ParkingLot(val size: Int, val spots: MutableMap<Int, Car>) {
         }
     }
 
+    private fun carsByColor(color: String): List<Car> {
+
+        val carsWithColor = spots.values.filter { it.color.lowercase() == color.lowercase() }
+
+        return carsWithColor
+    }
+
+    fun regByColor(color: String): String {
+
+        val carsWithColor = carsByColor(color)
+
+        if (carsWithColor.isNullOrEmpty()) {
+            return "No cars with color $color were found."
+        }
+
+        val registrationIds = mutableListOf<String>()
+
+        for (car in carsWithColor) registrationIds.add(car.id)
+
+        return registrationIds.joinToString(", ")
+
+    }
+
     private fun check(spot: Int): Car? = spots[spot]
 }
 
@@ -59,10 +83,13 @@ fun showMenu() {
         val input = readln()
         val split = input.split(" ")
 
+        val command = split.firstOrNull()
+        val arguments = split.drop(1)
+
         try {
-            when (split.firstOrNull()) {
+            when (command) {
                 "create" -> {
-                    val amount = split[1].toInt()
+                    val amount = arguments[0].toInt()
                     parkingLot = ParkingLot(amount, mutableMapOf())
                     println("Created a parking lot with $amount spots.")
                 }
@@ -74,10 +101,11 @@ fun showMenu() {
                         continue
                     }
 
-                    when (split.firstOrNull()) {
-                        "leave" -> parkingLot.leave(split[1].toInt())
-                        "park" -> parkingLot.park(split[1], split[2])
+                    when (command) {
+                        "leave" -> parkingLot.leave(arguments[0].toInt())
+                        "park" -> parkingLot.park(arguments[0], arguments[1])
                         "status" -> parkingLot.printStatus()
+                        "reg_by_color" -> println(parkingLot.regByColor(arguments[0]))
                     }
                 }
             }
