@@ -4,9 +4,9 @@ import java.lang.IndexOutOfBoundsException
 
 data class Car(val id: String, val color: String)
 
-val parkingLot = mutableMapOf<Int,Car>(
-    1 to Car("","")         //The car doesn't matter, it just has to be filled
-)
+val parkingLot = mutableMapOf<Int,Car>()
+
+const val PARKING_LOT_SIZE = 20
 
 fun main() {
     showMenu()
@@ -27,20 +27,20 @@ fun showMenu() {
         } catch (e: IndexOutOfBoundsException) {
             println(e)
         }
-
-        break
     }
 }
 
 fun park(id: String, color: String) {
 
     var i = 1
-
     while (parkingLot[i] != null) i++
 
-    parkingLot[i] = Car(id, color)
-    println("$color car parked in spot $i.")
-
+    if (i > PARKING_LOT_SIZE) {
+        println("Sorry, the parking lot is full.")
+    } else {
+        parkingLot[i] = Car(id, color)
+        println("$color car parked in spot $i.")
+    }
 }
 
 fun leave(spot: Int) {
