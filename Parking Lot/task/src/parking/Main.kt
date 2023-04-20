@@ -99,6 +99,9 @@ data class ParkingLot(val size: Int, val spots: MutableMap<Int, Car>) {
 }
 
 fun main() {
+
+    println("Kotlin".reversed())
+
     showMenu()
 }
 
