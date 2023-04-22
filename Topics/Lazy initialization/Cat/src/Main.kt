@@ -1,10 +1,6 @@
 class Cat {
-    lateinit var name: String
+    val name: String 
 
-    fun callName(): String {
-        if (::name.isInitialized) {
-
-        }
-    }
+    fun callName(): String
 
 }
